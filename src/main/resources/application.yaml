@@ -1,0 +1,21 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: ecdsa
+  profiles:
+    active: dev
+
+application:
+  jwt:
+    private-key: |
+      -----BEGIN PRIVATE KEY-----
+      
+      -----END PRIVATE KEY-----
+    public-key: |
+      -----BEGIN PUBLIC KEY-----
+      
+      -----END PUBLIC KEY-----
+    issuer: https://localhost:8080
+    expiryInHours: 24
