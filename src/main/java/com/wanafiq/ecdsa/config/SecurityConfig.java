@@ -1,7 +1,8 @@
 package com.wanafiq.ecdsa.config;
 
-import com.wanafiq.ecdsa.common.Constant;
 import com.wanafiq.ecdsa.config.filter.JwtFilter;
+import com.wanafiq.ecdsa.config.handler.CustomAccessDeniedHandler;
+import com.wanafiq.ecdsa.config.handler.CustomUnauthorizedHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,13 +34,17 @@ public class SecurityConfig {
 
     private final ApplicationProperties properties;
     private final JwtFilter jwtFilter;
+    private final CustomUnauthorizedHandler unauthorizedHandler;
+    private final CustomAccessDeniedHandler accessDeniedHandler;
+
+    private static final String ROLE_ADMIN = "ADMIN";
 
     private static final String[] PUBLIC_ENDPOINTS = {
             "/api/auth/**"
     };
 
     private static final String[] REQUIRES_ADMIN_ROLE = {
-            "/api/users/activate"
+            "/api/users/activate/**"
     };
 
     @Bean
@@ -50,13 +55,16 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // only allow public endpoints, everything else is protected
                         .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
-                        .requestMatchers(REQUIRES_ADMIN_ROLE).hasAuthority(Constant.ROLE_ADMIN)
-                        .anyRequest().hasAnyAuthority(Constant.ROLE_USER)
+                        .requestMatchers(REQUIRES_ADMIN_ROLE).hasRole(ROLE_ADMIN)
+                        .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .addFilterAfter(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint(unauthorizedHandler)
+                        .accessDeniedHandler(accessDeniedHandler))
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .build();

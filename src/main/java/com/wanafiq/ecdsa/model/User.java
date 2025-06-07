@@ -32,18 +32,23 @@ public class User extends Audit {
     @Column(name = "registered_at")
     private Instant registeredAt;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constant.DEFAULT_DATE_FORMAT, timezone = Constant.DEFAULT_TIMEZONE)
     @Column(name = "activated_at")
     private Instant activatedAt;
 
+    @JsonIgnore
     @Column(name = "account_non_expired")
     private boolean accountNonExpired;
 
+    @JsonIgnore
     @Column(name = "account_non_locked")
     private boolean accountNonLocked;
 
+    @JsonIgnore
     @Column(name = "credentials_non_expired")
     private boolean credentialsNonExpired;
 
+    @JsonIgnore
     @Column(name = "enabled")
     private boolean enabled;
 
