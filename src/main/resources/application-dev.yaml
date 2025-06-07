@@ -32,3 +32,6 @@ application:
       -----END PUBLIC KEY-----
     issuer: https://localhost:8081
     expiryInHours: 24
+  cors:
+    allowed-origins:
+      - http://localhost:3000
