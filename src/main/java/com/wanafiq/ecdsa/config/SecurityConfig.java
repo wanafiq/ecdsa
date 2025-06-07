@@ -35,7 +35,11 @@ public class SecurityConfig {
     private final JwtFilter jwtFilter;
 
     private static final String[] PUBLIC_ENDPOINTS = {
-            "/api/login"
+            "/api/auth/**"
+    };
+
+    private static final String[] REQUIRES_ADMIN_ROLE = {
+            "/api/users/activate"
     };
 
     @Bean
@@ -46,6 +50,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // only allow public endpoints, everything else is protected
                         .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
+                        .requestMatchers(REQUIRES_ADMIN_ROLE).hasAuthority(Constant.ROLE_ADMIN)
                         .anyRequest().hasAnyAuthority(Constant.ROLE_USER)
                 )
                 .sessionManagement(session -> session

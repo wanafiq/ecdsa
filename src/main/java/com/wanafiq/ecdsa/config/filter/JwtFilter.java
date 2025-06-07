@@ -56,7 +56,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
         List<String> excludedPaths = List.of(
                 "/h2",
-                "/api/login"
+                "/api/auth"
         );
 
         return excludedPaths.stream()
