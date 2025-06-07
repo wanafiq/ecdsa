@@ -3,11 +3,9 @@ package com.wanafiq.ecdsa.config;
 import com.github.f4b6a3.ulid.Ulid;
 import com.github.f4b6a3.ulid.UlidCreator;
 import com.wanafiq.ecdsa.model.Audit;
-import com.wanafiq.ecdsa.utils.SecurityUtils;
+import com.wanafiq.ecdsa.common.SecurityUtils;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
@@ -36,8 +34,7 @@ public class AuditListener {
     }
 
     private String getAuditor() {
-        SecurityContext sc = SecurityContextHolder.getContext();
-        String auditor = SecurityUtils.getPrincipalName(sc.getAuthentication());
+        String auditor = SecurityUtils.getPrincipalName();
         return auditor != null ? auditor : "system";
     }
 

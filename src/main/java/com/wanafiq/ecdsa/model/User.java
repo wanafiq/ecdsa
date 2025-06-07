@@ -1,6 +1,8 @@
 package com.wanafiq.ecdsa.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.wanafiq.ecdsa.common.Constant;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -25,6 +27,10 @@ public class User extends Audit {
 
     @Column(name = "full_name")
     private String fullName;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constant.DEFAULT_DATE_FORMAT, timezone = Constant.DEFAULT_TIMEZONE)
+    @Column(name = "registered_at")
+    private Instant registeredAt;
 
     @Column(name = "activated_at")
     private Instant activatedAt;

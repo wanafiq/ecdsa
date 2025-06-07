@@ -2,7 +2,7 @@ package com.wanafiq.ecdsa.service;
 
 import com.wanafiq.ecdsa.model.User;
 import com.wanafiq.ecdsa.repository.UserRepository;
-import com.wanafiq.ecdsa.web.exception.AppException;
+import com.wanafiq.ecdsa.web.exception.UnauthorizedException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
@@ -26,8 +26,10 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepo.findByEmail(email).orElseThrow(() -> {
             log.error("User with email {} not found", email);
-            return new AppException();
+            return new UnauthorizedException();
         });
+
+        log.debug("User {}, {} found", user.getId(), user.getEmail());
 
         List<GrantedAuthority> authorities = user.getRoles().stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName()))

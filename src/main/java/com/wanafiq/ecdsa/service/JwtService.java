@@ -44,7 +44,7 @@ public class JwtService {
 
             log.info("JWT Service initialized");
         } catch (Exception e) {
-            log.error("Unexpected error during JWT Service initialization", e);
+            log.error("Unexpected error during JWT Service initialization: {}", e.getMessage());
             throw new AppException();
         }
     }
@@ -90,17 +90,25 @@ public class JwtService {
     }
 
     public boolean isValidToken(String token) {
-        return extractClaim(token, Claims::getExpiration).before(new Date());
+        return extractClaim(token, Claims::getExpiration).after(new Date());
+    }
+
+    public String extractSubject(String token) {
+        return extractClaim(token, Claims::getSubject);
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<String> extractRoles(String token) {
+        final Claims claims = extractAllClaims(token);
+        return claims.get("roles", List.class);
     }
 
     private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
-        final Claims claims = extractClaims(token);
+        final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
 
-    private Claims extractClaims(String token) {
-        log.debug("Extracting claims from token");
-
+    private Claims extractAllClaims(String token) {
         try {
             return Jwts.parser()
                     .verifyWith(publicKey)

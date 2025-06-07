@@ -1,5 +1,6 @@
 package com.wanafiq.ecdsa.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.wanafiq.ecdsa.config.AuditListener;
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
@@ -26,18 +27,22 @@ public class Audit {
     @Column(name = "id", nullable = false)
     private String id;
 
+    @JsonIgnore
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreatedDate
     private Instant createdAt;
 
+    @JsonIgnore
     @Column(name = "created_by", nullable = false, updatable = false)
     @CreatedBy
     private String createdBy;
 
+    @JsonIgnore
     @Column(name = "modified_at")
     @LastModifiedDate
     private Instant modifiedAt;
 
+    @JsonIgnore
     @Column(name = "modified_by")
     @LastModifiedBy
     private String modifiedBy;

@@ -10,6 +10,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.time.Instant;
 import java.util.List;
 
 @Slf4j
@@ -43,6 +44,7 @@ public class DataLoader implements CommandLineRunner {
                     .password(password)
                     .fullName("User")
                     .roles(List.of(role))
+                    .registeredAt(Instant.now())
                     .build();
 
             userRepo.save(user);
